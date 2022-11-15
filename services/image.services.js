@@ -3,7 +3,7 @@ const db = require("../db/db");
 async function getImageUpload(req) {
   const { office_name_from, office_name_to, subject_txt } = req.body;
   const data = await db.query(
-    "INSERT INTO  data_list ( office_name_from, office_name_to, subject_txt, imgUrl) VALUES (?, ?, ?, ?)",
+    "INSERT INTO  data_list ( office_name_from, office_name_to, subject_txt, imgUrl , dateTime_now) VALUES (?, ?, ?, ?, NOW())",
     [
       office_name_from,
       office_name_to,
@@ -12,6 +12,7 @@ async function getImageUpload(req) {
     ]
   );
   return {
+    success: true,
     data,
   };
 }
@@ -23,13 +24,11 @@ async function getAllData() {
   };
 }
 
-async function getAllSendData(req) {
+async function getAllInboxData(req) {
   const { officeName } = req.params;
-  const aasd = officeName;
-  console.log(aasd);
   const data = await db.query(
     `SELECT * FROM data_list where office_name_to = ?`,
-    [aasd]
+    [officeName]
   );
 
   return {
@@ -37,13 +36,11 @@ async function getAllSendData(req) {
   };
 }
 
-async function getAllInboxData(req) {
+async function getAllSendData(req) {
   const { officeName } = req.params;
-  const aasd = officeName;
-  console.log(aasd);
   const data = await db.query(
     `SELECT * FROM data_list where office_name_from = ?`,
-    [aasd]
+    [officeName]
   );
 
   return {

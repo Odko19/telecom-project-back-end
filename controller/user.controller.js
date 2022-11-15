@@ -6,7 +6,7 @@ const userLogin = async (req, res) => {
   try {
     const { office_name, passport } = req.body;
     if (Object.values(office_name).length === 0) {
-      res.status(400).json({
+      res.json({
         success: false,
         message: "No user is provided",
       });
@@ -25,7 +25,7 @@ const userLogin = async (req, res) => {
             expiresIn: "2h",
           }
         );
-        res.status(200).json({
+        res.json({
           success: true,
           data: {
             office_name: office_name,
@@ -33,9 +33,9 @@ const userLogin = async (req, res) => {
           token: token,
         });
       } else {
-        res.status(401).json({
+        res.json({
           success: false,
-          data: "Email or Password do not match",
+          data: "Office name or Password do not match",
         });
       }
     }
