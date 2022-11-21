@@ -6,10 +6,11 @@ const imageController = require("../controller/image.controller");
 router.post(
   "/upload",
   imageUploader.upload.single("image"),
-  imageController.uploadImage
+  imageController.getImageUpload
 );
 router.get("/upload", imageController.getAllData);
-router.get("/sendData/:officeName", imageController.getAllSendData);
-router.get("/inboxData/:officeName", imageController.getAllInboxData);
+router.get("/sent/:officeName", imageController.getAllSent);
+router.get("/inbox/:officeName", imageController.getAllInbox);
+router.post("/dlt", imageController.getDltData);
 
 module.exports = router;

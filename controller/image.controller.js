@@ -1,6 +1,6 @@
 const imageService = require("../services/image.services");
 
-const uploadImage = async (req, res) => {
+const getImageUpload = async (req, res) => {
   try {
     res.json(await imageService.getImageUpload(req));
   } catch (error) {
@@ -16,20 +16,34 @@ const getAllData = async (req, res) => {
   }
 };
 
-const getAllSendData = async (req, res) => {
+const getAllSent = async (req, res) => {
   try {
-    res.json(await imageService.getAllSendData(req));
+    res.json(await imageService.getAllSent(req));
   } catch (error) {
     console.error(error);
   }
 };
 
-const getAllInboxData = async (req, res) => {
+const getAllInbox = async (req, res) => {
   try {
-    res.json(await imageService.getAllInboxData(req));
+    res.json(await imageService.getAllInbox(req));
   } catch (error) {
     console.error(error);
   }
 };
 
-module.exports = { uploadImage, getAllData, getAllSendData, getAllInboxData };
+const getDltData = async (req, res) => {
+  try {
+    res.json(await imageService.getDltData(req));
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+module.exports = {
+  getImageUpload,
+  getAllData,
+  getAllSent,
+  getAllInbox,
+  getDltData,
+};
