@@ -5,7 +5,11 @@ import axios from "axios";
 import moment from "moment";
 import Mail from "../../page/Mail";
 
-const mailtype = ["Ирсэн майл", "Явуулсан майл", "Архивласан майл"];
+const mailtype = [
+  { type: "Ирсэн майл", name: "office_name_to" },
+  { type: "Явуулсан майл", name: "office_name_from" },
+  { type: "Архивласан майл", name: "archives" },
+];
 
 function Admin() {
   const [officeName, setOfficeName] = useState();
@@ -17,13 +21,42 @@ function Admin() {
       .get("http://localhost:3001/v1")
       .then((res) => setOfficeName(res.data.data))
       .catch((error) => console.log(error));
+  }, []);
+
+  useEffect(() => {
     axios
       .get("http://localhost:3001/v1/upload")
       .then((res) => setAllMail(res.data.data))
       .catch((error) => console.log(error));
-  });
+  }, []);
+
   function handlerBtn(mail) {
     setSelectMail(mail);
+  }
+
+  function handlerBtnFilter(e) {
+    e.preventDefault();
+
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    var raw = JSON.stringify({
+      office_id: e.target.select_name.value,
+      mail_type: e.target.select_mail.value,
+      start_date: e.target.start_date.value,
+    });
+
+    var requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+
+    fetch("http://localhost:3001/v1/filter", requestOptions)
+      .then((response) => response.text())
+      .then((result) => setAllMail(JSON.parse(result).data))
+      .catch((error) => console.log("error", error));
   }
 
   return (
@@ -41,20 +74,24 @@ function Admin() {
               <Mail state={setSelectMail} data={selectMail} />
             ) : (
               <>
-                <div className=" border-b-[1px] h-[14vh]">
-                  <form>
+                <div className="border-b-[1px] h-[14vh] ">
+                  <form onSubmit={handlerBtnFilter}>
                     <div className="mb-4 flex items-center">
                       <div className="flex flex-col mr-4">
                         <label className="text-[rgba(0,0,0,0.5)] text-[12px] mb-3">
                           Cалбар нэгж :
                         </label>
                         <select
-                          name="selected"
+                          name="select_name"
                           className="bg-[#f8f8f8] rounded-lg outline-0 focus:outline-0 text-[14px] p-2"
                         >
                           {officeName?.map((name, index) => {
                             return (
-                              <option key={index} className="text-[14px]">
+                              <option
+                                key={index}
+                                value={name.id}
+                                className="text-[14px]"
+                              >
                                 {name.office_name}
                               </option>
                             );
@@ -66,13 +103,17 @@ function Admin() {
                           Майл төрөл
                         </label>
                         <select
-                          name="selected"
+                          name="select_mail"
                           className="bg-[#f8f8f8] rounded-lg outline-0 focus:outline-0 text-[14px] p-2"
                         >
-                          {mailtype?.map((name, index) => {
+                          {mailtype?.map((mail, index) => {
                             return (
-                              <option key={index} className="text-[14px]">
-                                {name}
+                              <option
+                                key={index}
+                                value={mail.name}
+                                className="text-[14px]"
+                              >
+                                {mail.type}
                               </option>
                             );
                           })}
@@ -80,30 +121,26 @@ function Admin() {
                       </div>
                       <div className="flex flex-col mr-4">
                         <label className="text-[rgba(0,0,0,0.5)] text-[12px] mb-3">
-                          Эхлэх он сар
+                          Он сар
                         </label>
                         <input
                           type="date"
+                          name="start_date"
                           className="bg-[#f8f8f8] rounded-lg outline-0 focus:outline-0 text-[14px] p-2"
                           // defaultValue={moment(new Date())
                           //   .subtract(10, "days")
                           //   .calendar()}
                         />
                       </div>
-                      <div className="flex flex-col mr-4">
-                        <label className="text-[rgba(0,0,0,0.5)] text-[12px] mb-3">
-                          Сүүлийн он сар
-                        </label>
-                        <input
-                          type="date"
-                          className="bg-[#f8f8f8] rounded-lg outline-0 focus:outline-0 text-[14px] p-2"
-                        />
-                      </div>
+
                       <div className="flex flex-col">
                         <label className="text-[rgba(0,0,0,0.5)] text-[12px] mb-3">
                           Хайлт хийх
                         </label>
-                        <button className="rounded-lg p-2 bg-[#1e45a2] text-[#ffffff]">
+                        <button
+                          type="submit"
+                          className="rounded-lg p-1.5 hover:bg-[red] bg-[#1e45a2]  text-[#ffffff]"
+                        >
                           хайх
                         </button>
                       </div>

@@ -76,7 +76,7 @@ function Login() {
               />
               <button
                 type="submit "
-                className="w-full bg-[#1e45a2] text-[#ffffff] p-3 mt-5 rounded-lg uppercase"
+                className="w-full bg-[#1e45a2] text-[#ffffff] p-3 mt-5 rounded-lg uppercase hover:bg-[red]"
               >
                 Нэвтрэх
               </button>

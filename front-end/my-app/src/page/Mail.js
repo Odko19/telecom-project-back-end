@@ -7,12 +7,12 @@ function Mail({ data, state }) {
   }
   return (
     <div className="h-[78vh] w-full overflow-auto scrollbar-hide">
-      <div className="border-b-[1px] w-full">
+      <div className="border-b-[1px] bg-[#ffffff] ">
         <button onClick={handlerBack}>
           <HiArrowSmLeft size="21px" />
         </button>
       </div>
-      <div className="mt-3">
+      <div className="mt-10">
         <p>
           <span className="text-[12px] text-[rgba(0,0,0,0.5)]"> To: </span>
           <span className="ml-[22px]">{data.office_to}</span>

@@ -34,7 +34,7 @@ function Sidebar() {
           </NavLink>
         </div>
         <div className="mb-8">
-          <button onClick={handlerExit}>
+          <button onClick={handlerExit} className="hover:text-[white]">
             <RiLogoutBoxRLine size="21px" />
           </button>
         </div>

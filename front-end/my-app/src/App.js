@@ -4,7 +4,6 @@ import Main from "./componants/Main";
 import Login from "./componants/Login";
 import { useEffect, useState } from "react";
 import Admin from "./componants/Admin/Admin";
-import { useUser } from "./contexts/userCtx";
 
 function App() {
   const [user, setUser] = useState();

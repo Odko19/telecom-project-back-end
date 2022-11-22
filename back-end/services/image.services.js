@@ -127,6 +127,103 @@ async function getAllData() {
   };
 }
 
+async function getAllAdminInboxSent(req) {
+  const { office_id, mail_type, start_date } = req.body;
+  // console.log(office_id);
+  // console.log(mail_type);
+  // console.log(start_date.length);
+  let data;
+  if (start_date.length === 0) {
+    if (mail_type === "office_name_from") {
+      data = await db.query(
+        `SELECT data_list.id,
+      data_list.subject_txt, data_list.imgUrl, data_list.dateTime_now, data_list.archives,
+      office_from.office_name as office_from,
+      office_to.office_name as office_to
+      from data_list
+      INNER JOIN office_list office_from ON data_list.office_name_from = office_from.id
+      LEFT JOIN office_list office_to ON data_list.office_name_to = office_to.id
+      WHERE data_list.office_name_from = ? `,
+        [office_id]
+      );
+    }
+    if (mail_type === "office_name_to") {
+      data = await db.query(
+        `SELECT data_list.id,
+      data_list.subject_txt, data_list.imgUrl, data_list.dateTime_now, data_list.archives,
+      office_from.office_name as office_from,
+      office_to.office_name as office_to
+      from data_list
+      INNER JOIN office_list office_from ON data_list.office_name_from = office_from.id
+      LEFT JOIN office_list office_to ON data_list.office_name_to = office_to.id
+      WHERE data_list.office_name_to =?`,
+        [office_id]
+      );
+    } else {
+      if (mail_type === "archives") {
+        data = await db.query(
+          `SELECT data_list.id,
+      data_list.subject_txt, data_list.imgUrl, data_list.dateTime_now, data_list.archives,
+      office_from.office_name as office_from,
+      office_to.office_name as office_to
+      from data_list
+      INNER JOIN office_list office_from ON data_list.office_name_from = office_from.id
+      LEFT JOIN office_list office_to ON data_list.office_name_to = office_to.id
+      WHERE (data_list.office_name_to =? OR data_list.office_name_from=?) 
+      and data_list.archives = ?`,
+          [office_id, office_id, 1]
+        );
+      }
+    }
+  } else {
+    if (mail_type === "office_name_from") {
+      data = await db.query(
+        `SELECT data_list.id,
+      data_list.subject_txt, data_list.imgUrl, data_list.dateTime_now, data_list.archives,
+      office_from.office_name as office_from,
+      office_to.office_name as office_to
+      from data_list
+      INNER JOIN office_list office_from ON data_list.office_name_from = office_from.id
+      LEFT JOIN office_list office_to ON data_list.office_name_to = office_to.id
+      WHERE data_list.office_name_from = ? and data_list.dateTime_now > ?`,
+        [office_id, start_date]
+      );
+    }
+    if (mail_type === "office_name_to") {
+      data = await db.query(
+        `SELECT data_list.id,
+      data_list.subject_txt, data_list.imgUrl, data_list.dateTime_now, data_list.archives,
+      office_from.office_name as office_from,
+      office_to.office_name as office_to
+      from data_list
+      INNER JOIN office_list office_from ON data_list.office_name_from = office_from.id
+      LEFT JOIN office_list office_to ON data_list.office_name_to = office_to.id
+      WHERE data_list.office_name_to =? and data_list.dateTime_now > ? ;`,
+        [office_id, start_date]
+      );
+    } else {
+      if (mail_type === "archives") {
+        data = await db.query(
+          `SELECT data_list.id,
+      data_list.subject_txt, data_list.imgUrl, data_list.dateTime_now, data_list.archives,
+      office_from.office_name as office_from,
+      office_to.office_name as office_to
+      from data_list
+      INNER JOIN office_list office_from ON data_list.office_name_from = office_from.id
+      LEFT JOIN office_list office_to ON data_list.office_name_to = office_to.id
+      WHERE (data_list.office_name_to =? OR data_list.office_name_from=?) 
+      and data_list.archives = ? and data_list.dateTime_now > ?`,
+          [office_id, office_id, 1, start_date]
+        );
+      }
+    }
+  }
+  return {
+    success: true,
+    data,
+  };
+}
+
 module.exports = {
   getImageUpload,
   getAllData,
@@ -135,4 +232,5 @@ module.exports = {
   getDltData,
   getArchives,
   getArchivesList,
+  getAllAdminInboxSent,
 };

@@ -23,7 +23,7 @@ function SidebarAdmin() {
       <div className="h-full flex flex-col justify-between items-center">
         <div className="flex flex-col justify-between items-center">
           {/* <img src="./logo.png" alt="" className="mt-2" /> */}
-          <NavLink style={navLinkStyles} to="/" className="p-3 mt-[3.5vw]">
+          {/* <NavLink style={navLinkStyles} to="/" className="p-3 mt-[3.5vw]">
             <RiInboxFill size="21px" />
           </NavLink>
           <NavLink style={navLinkStyles} to="/sent" className="p-3">
@@ -31,10 +31,10 @@ function SidebarAdmin() {
           </NavLink>
           <NavLink style={navLinkStyles} to="/archives" className="p-3">
             <RiArchiveDrawerFill size="21px" />
-          </NavLink>
+          </NavLink> */}
         </div>
         <div className="mb-8">
-          <button onClick={handlerExit}>
+          <button onClick={handlerExit} className="hover:text-[white]">
             <RiLogoutBoxRLine size="21px" />
           </button>
         </div>

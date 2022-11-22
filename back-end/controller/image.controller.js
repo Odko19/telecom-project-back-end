@@ -58,6 +58,14 @@ const getAllData = async (req, res) => {
   }
 };
 
+const getDataFilter = async (req, res) => {
+  try {
+    res.json(await imageService.getAllAdminInboxSent(req));
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 module.exports = {
   getImageUpload,
   getAllData,
@@ -66,4 +74,5 @@ module.exports = {
   getDltData,
   getArchives,
   getArchivesList,
+  getDataFilter,
 };

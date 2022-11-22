@@ -14,5 +14,6 @@ router.get("/inbox/:office_id", imageController.getAllInbox);
 router.post("/dlt", imageController.getDltData);
 router.post("/archives", imageController.getArchives);
 router.get("/archivesList/:id", imageController.getArchivesList);
+router.post("/filter", imageController.getDataFilter);
 
 module.exports = router;
