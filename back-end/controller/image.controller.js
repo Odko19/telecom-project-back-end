@@ -8,14 +8,6 @@ const getImageUpload = async (req, res) => {
   }
 };
 
-const getAllData = async (req, res) => {
-  try {
-    res.json(await imageService.getAllData());
-  } catch (error) {
-    console.error(error);
-  }
-};
-
 const getAllSent = async (req, res) => {
   try {
     res.json(await imageService.getAllSent(req));
@@ -51,6 +43,16 @@ const getArchives = async (req, res) => {
 const getArchivesList = async (req, res) => {
   try {
     res.json(await imageService.getArchivesList(req));
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+/* All mail ADMIN */
+
+const getAllData = async (req, res) => {
+  try {
+    res.json(await imageService.getAllData());
   } catch (error) {
     console.error(error);
   }

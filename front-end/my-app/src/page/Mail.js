@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { HiArrowSmLeft } from "react-icons/hi";
 
 function Mail({ data, state }) {
-  console.log(data);
   function handlerBack() {
     state(0);
   }
@@ -22,10 +21,10 @@ function Mail({ data, state }) {
           <span className="text-[12px] text-[rgba(0,0,0,0.5)]">Subject: </span>
           <span className="ml-[10px]">{data.subject_txt}</span>
         </p>
-        {data.imgUrl.map((a) => {
+        {data.imgUrl.map((image, index) => {
           return (
-            <div className="mt-5">
-              <img src={a} className="h-[50vh]" />
+            <div key={index} className="mt-5">
+              <img src={image} className="h-[50vh]" />
             </div>
           );
         })}

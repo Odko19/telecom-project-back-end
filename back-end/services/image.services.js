@@ -5,7 +5,6 @@ async function getImageUpload(req) {
   const imgArr = req.files.map((a) => {
     return `http://localhost:3001/uploads/${a.filename}`;
   });
-  console.log(imgArr);
   const data = await db.query(
     "INSERT INTO  data_list ( office_name_from, office_name_to, subject_txt, imgUrl , dateTime_now) VALUES (?, ?, ?, ?, NOW())",
     [
@@ -16,15 +15,6 @@ async function getImageUpload(req) {
       imgArr,
     ]
   );
-  const data1 = await db.query(`SELECT * FROM data_list `);
-  return {
-    success: true,
-    data,
-  };
-}
-
-async function getAllData() {
-  const data = await db.query(`SELECT * FROM data_list `);
   return {
     success: true,
     data,
@@ -45,10 +35,6 @@ async function getAllInbox(req) {
     [office_id]
   );
 
-  // const data = await db.query(
-  //   `SELECT * FROM data_list where office_name_to = ?`,
-  //   [officeName]
-  // );
   return {
     success: true,
     data,
@@ -103,7 +89,6 @@ async function getArchives(req) {
 
 async function getArchivesList(req) {
   const { id } = req.params;
-  console.log(id);
   const data = await db.query(
     `
     SELECT data_list.id,
@@ -116,6 +101,25 @@ async function getArchivesList(req) {
     WHERE data_list.archives =1 and (data_list.office_name_to = ? or data_list.office_name_from = ?)
     `,
     [id, id]
+  );
+  return {
+    success: true,
+    data,
+  };
+}
+
+/* All mail ADMIN */
+
+async function getAllData() {
+  const data = await db.query(
+    `SELECT data_list.id, 
+  data_list.subject_txt, data_list.imgUrl, data_list.dateTime_now, data_list.archives,
+  office_from.office_name as office_from,
+  office_to.office_name as office_to
+  from data_list
+  INNER JOIN office_list office_from ON data_list.office_name_from = office_from.id
+  LEFT JOIN office_list office_to ON data_list.office_name_to = office_to.id
+  `
   );
   return {
     success: true,

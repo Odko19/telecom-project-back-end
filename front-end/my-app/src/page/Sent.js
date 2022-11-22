@@ -5,7 +5,7 @@ import Mail from "./Mail";
 import Navbar from "../componants/Navbar";
 
 function Sent() {
-  const [inbox, setInbox] = useState();
+  const [sent, setSent] = useState();
   const [selectMail, setSelectMail] = useState();
   const [user, setUser] = useState();
   const [checkedId, setCheckedId] = useState();
@@ -18,9 +18,9 @@ function Sent() {
   useEffect(() => {
     axios
       .get(`http://localhost:3001/v1/sent/${user?.data.id}`)
-      .then((res) => setInbox(res.data.data))
+      .then((res) => setSent(res.data.data))
       .catch((error) => console.log(error));
-  });
+  }, [user, sent]);
   const checkBox = document.querySelectorAll(".select-option");
   function handlerBtn(mail) {
     setSelectMail(mail);
@@ -49,7 +49,7 @@ function Sent() {
                 <Navbar checkBox={checkBox} checkedId={checkedId} />
               </div>
             </div>
-            {inbox?.map((mail, index) => {
+            {sent?.map((mail, index) => {
               return (
                 <div
                   key={index}

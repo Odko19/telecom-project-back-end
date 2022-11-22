@@ -13,9 +13,10 @@ function Compose() {
 
   function handlerBtn(e) {
     e.preventDefault();
-    console.log(e.target.image.files[0]);
     var formdata = new FormData();
-    formdata.append("image", e.target.image.files[0]);
+    for (let i = 0; i < e.target.image.files.length; i++) {
+      formdata.append("image", e.target.image.files[i]);
+    }
     formdata.append("office_name_from", user?.data.id);
     formdata.append("office_name_to", e.target.selected.value);
     formdata.append("subject_txt", e.target.subject.value);
