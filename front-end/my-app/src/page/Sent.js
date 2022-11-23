@@ -9,6 +9,7 @@ function Sent() {
   const [selectMail, setSelectMail] = useState();
   const [user, setUser] = useState();
   const [checkedId, setCheckedId] = useState();
+
   useEffect(() => {
     if (window.localStorage.getItem("user")) {
       setUser(JSON.parse(window.localStorage.getItem("user")));
@@ -16,11 +17,14 @@ function Sent() {
   }, []);
 
   useEffect(() => {
-    axios
-      .get(`http://localhost:3001/v1/sent/${user?.data.id}`)
-      .then((res) => setSent(res.data.data))
-      .catch((error) => console.log(error));
-  }, [user, sent]);
+    if (user) {
+      axios
+        .get(`http://localhost:3001/v1/sent/${user?.data.id}`)
+        .then((res) => setSent(res.data.data))
+        .catch((error) => console.log(error));
+    }
+  }, [user]);
+
   const checkBox = document.querySelectorAll(".select-option");
   function handlerBtn(mail) {
     setSelectMail(mail);
@@ -37,6 +41,13 @@ function Sent() {
     setCheckedId(array);
   }
 
+  function onSearchChanged(event) {
+    const result = sent.filter((subject) =>
+      subject.subject_txt.toLowerCase().includes(event)
+    );
+    setSent(result);
+  }
+
   return (
     <div>
       {selectMail ? (
@@ -46,14 +57,18 @@ function Sent() {
           <div className="h-[78vh] w-full overflow-auto scrollbar-hide">
             <div className="border-b-[1px] w-full">
               <div className="w-full h-[8vh]">
-                <Navbar checkBox={checkBox} checkedId={checkedId} />
+                <Navbar
+                  checkBox={checkBox}
+                  checkedId={checkedId}
+                  onSearch={onSearchChanged}
+                />
               </div>
             </div>
             {sent?.map((mail, index) => {
               return (
                 <div
                   key={index}
-                  className="flex justify-start items-center  border-b-[1px] m-3 h-[5vh] "
+                  className="flex justify-start items-center  border-b-[1px] my-[10px] h-[5vh] hover:shadow-md"
                 >
                   <input
                     type="checkbox"
@@ -65,7 +80,19 @@ function Sent() {
                     className="flex w-full justify-between"
                     onClick={() => handlerBtn(mail)}
                   >
-                    <p className="text-[12px]">{mail.subject_txt}</p>
+                    <div className="flex">
+                      <p className="text-[12px] w-[250px] flex items-start">
+                        {mail.office_to}
+                      </p>
+                      {mail.subject_txt.length > 50 ? (
+                        <p className="text-[12px] ml-5 z-40">
+                          {mail.subject_txt.slice(0, 50)} ...
+                        </p>
+                      ) : (
+                        <p className="text-[12px] ml-5 ">{mail.subject_txt}</p>
+                      )}
+                    </div>
+
                     <p className="text-[12px]">
                       {moment(mail.dateTime).format("lll")}
                     </p>

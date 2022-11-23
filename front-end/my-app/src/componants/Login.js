@@ -53,7 +53,7 @@ function Login() {
             <div className="mb-4">
               <select
                 name="selected"
-                className="w-full bg-[#f8f8f8] outline-0 focus:outline-0 text-[14px] p-3 rounded-lg"
+                className="w-full bg-[rgba(217,217,217,0.4)] outline-0 focus:outline-0 text-[14px] p-3 rounded-lg"
               >
                 {officeName?.map((name, index) => {
                   return (
@@ -72,11 +72,11 @@ function Login() {
                 type="password"
                 placeholder="Нууц үгээ оруулна уу. "
                 name="password"
-                className="w-full bg-[#f8f8f8] outline-0 focus:outline-0 text-[14px] p-3 mt-5 rounded-lg"
+                className="w-full bg-[rgba(217,217,217,0.4)] outline-0 focus:outline-0 text-[14px] p-3 mt-5 rounded-lg"
               />
               <button
                 type="submit "
-                className="w-full bg-[#1e45a2] text-[#ffffff] p-3 mt-5 rounded-lg uppercase hover:bg-[red]"
+                className="w-full bg-[#1e45a2] text-[#ffffff] p-3 mt-5 rounded-lg uppercase hover:bg-[#1B3E91] "
               >
                 Нэвтрэх
               </button>

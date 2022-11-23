@@ -12,7 +12,7 @@ function User() {
       <div className="flex justify-center items-center ">
         <h3 className="text-xl font-medium">TELECOM MONGOLIA</h3>
       </div>
-      <div className="flex justify-center items-center bg-[#ffffff] w-[400px] rounded-lg text-[#000000] p-2">
+      <div className="flex justify-center items-center bg-[#ffffff] w-[400px] rounded-lg text-[#000000] p-2 shadow">
         {user?.office_name}
       </div>
     </div>

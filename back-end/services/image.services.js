@@ -3,7 +3,7 @@ const db = require("../db/db");
 async function getImageUpload(req) {
   const { office_name_from, office_name_to, subject_txt } = req.body;
   const imgArr = req.files.map((a) => {
-    return `http://localhost:3001/uploads/${a.filename}`;
+    return `http://10.0.10.102:3001/uploads/${a.filename}`;
   });
   const data = await db.query(
     "INSERT INTO  data_list ( office_name_from, office_name_to, subject_txt, imgUrl , dateTime_now) VALUES (?, ?, ?, ?, NOW())",

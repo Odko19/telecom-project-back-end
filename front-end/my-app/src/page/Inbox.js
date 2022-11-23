@@ -4,12 +4,6 @@ import axios from "axios";
 import Mail from "./Mail";
 import Navbar from "../componants/Navbar";
 
-import {
-  RiDeleteBinFill,
-  RiInboxArchiveFill,
-  RiArrowGoBackFill,
-} from "react-icons/ri";
-
 function Inbox() {
   const [inbox, setInbox] = useState();
   const [selectMail, setSelectMail] = useState();
@@ -23,11 +17,13 @@ function Inbox() {
   }, []);
 
   useEffect(() => {
-    axios
-      .get(`http://localhost:3001/v1/inbox/${user?.data.id}`)
-      .then((res) => setInbox(res.data.data))
-      .catch((error) => console.log(error));
-  }, [user, inbox]);
+    if (user) {
+      axios
+        .get(`http://localhost:3001/v1/inbox/${user?.data.id}`)
+        .then((res) => setInbox(res.data.data))
+        .catch((error) => console.log(error));
+    }
+  }, [user]);
 
   const checkBox = document.querySelectorAll(".select-option");
 
@@ -46,6 +42,13 @@ function Inbox() {
     setSelectMail(mail);
   }
 
+  function onSearchChanged(event) {
+    const result = inbox.filter((subject) =>
+      subject.subject_txt.toLowerCase().includes(event)
+    );
+    setInbox(result);
+  }
+
   return (
     <div>
       {selectMail ? (
@@ -55,14 +58,18 @@ function Inbox() {
           <div className="h-[78vh] w-full overflow-auto scrollbar-hide">
             <div className="border-b-[1px] w-full">
               <div className="w-full h-[8vh]">
-                <Navbar checkBox={checkBox} checkedId={checkedId} />
+                <Navbar
+                  checkBox={checkBox}
+                  checkedId={checkedId}
+                  onSearch={onSearchChanged}
+                />
               </div>
             </div>
             {inbox?.map((mail, index) => {
               return (
                 <div
                   key={index}
-                  className="flex justify-start items-center  border-b-[1px] m-3 h-[5vh] "
+                  className="flex justify-start items-center  border-b-[1px] my-[10px] h-[5vh] hover:shadow-md"
                 >
                   <input
                     type="checkbox"
@@ -75,7 +82,19 @@ function Inbox() {
                     className="flex w-full justify-between"
                     onClick={() => handlerBtn(mail)}
                   >
-                    <p className="text-[12px]">{mail.subject_txt}</p>
+                    <div className="flex ">
+                      <p className="text-[12px] w-[220px] flex items-start">
+                        {mail.office_from}
+                      </p>
+                      {mail.subject_txt.length > 50 ? (
+                        <p className="text-[12px] ml-5 z-40">
+                          {mail.subject_txt.slice(0, 50)} ...
+                        </p>
+                      ) : (
+                        <p className="text-[12px] ml-5 ">{mail.subject_txt}</p>
+                      )}
+                    </div>
+
                     <p className="text-[12px]">
                       {moment(mail.dateTime).format("lll")}
                     </p>

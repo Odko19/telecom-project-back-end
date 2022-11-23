@@ -4,12 +4,6 @@ import axios from "axios";
 import Mail from "./Mail";
 import Navbar from "../componants/Navbar";
 
-import {
-  RiDeleteBinFill,
-  RiInboxArchiveFill,
-  RiArrowGoBackFill,
-} from "react-icons/ri";
-
 function Archives() {
   const [archives, setArchives] = useState();
   const [selectMail, setSelectMail] = useState();
@@ -23,11 +17,13 @@ function Archives() {
   }, []);
 
   useEffect(() => {
-    axios
-      .get(`http://localhost:3001/v1/archivesList/${user?.id}`)
-      .then((res) => setArchives(res.data.data))
-      .catch((error) => console.log(error));
-  }, [user, archives]);
+    if (user) {
+      axios
+        .get(`http://localhost:3001/v1/archivesList/${user?.id}`)
+        .then((res) => setArchives(res.data.data))
+        .catch((error) => console.log(error));
+    }
+  }, [user]);
 
   const checkBox = document.querySelectorAll(".select-option");
   // for (let i = 0; i < checkBox.length; i++) {
@@ -51,6 +47,13 @@ function Archives() {
     setSelectMail(mail);
   }
 
+  function onSearchChanged(event) {
+    const result = archives.filter((subject) =>
+      subject.subject_txt.toLowerCase().includes(event)
+    );
+    setArchives(result);
+  }
+
   return (
     <div>
       {selectMail ? (
@@ -60,14 +63,18 @@ function Archives() {
           <div className="h-[78vh] w-full overflow-auto scrollbar-hide">
             <div className="border-b-[1px] w-full">
               <div className="w-full h-[8vh]">
-                <Navbar checkBox={checkBox} checkedId={checkedId} />
+                <Navbar
+                  checkBox={checkBox}
+                  checkedId={checkedId}
+                  onSearch={onSearchChanged}
+                />
               </div>
             </div>
             {archives?.map((mail, index) => {
               return (
                 <div
                   key={index}
-                  className="flex justify-start items-center  border-b-[1px] m-3 h-[5vh] "
+                  className="flex justify-start items-center  border-b-[1px] my-[10px] h-[5vh] hover:shadow-md"
                 >
                   <input
                     type="checkbox"
@@ -80,7 +87,18 @@ function Archives() {
                     className="flex w-full justify-between"
                     onClick={() => handlerBtn(mail)}
                   >
-                    <p className="text-[12px]">{mail.subject_txt}</p>
+                    <div className="flex ">
+                      <p className="text-[12px] w-[220px] flex items-start">
+                        {mail.office_from}
+                      </p>
+                      {mail.subject_txt.length > 50 ? (
+                        <p className="text-[12px] ml-5 z-40">
+                          {mail.subject_txt.slice(0, 50)} ...
+                        </p>
+                      ) : (
+                        <p className="text-[12px] ml-5 ">{mail.subject_txt}</p>
+                      )}
+                    </div>
                     <p className="text-[12px]">
                       {moment(mail.dateTime).format("lll")}
                     </p>

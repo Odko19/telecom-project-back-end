@@ -1,9 +1,10 @@
 import SidebarAdmin from "../Admin/SidebarAdmin";
 import User from "../User";
-import { useEffect, useState } from "react";
 import axios from "axios";
 import moment from "moment";
 import Mail from "../../page/Mail";
+import { useEffect, useState } from "react";
+import { RiSearchLine, RiFilterLine } from "react-icons/ri";
 
 const mailtype = [
   { type: "Ирсэн майл", name: "office_name_to" },
@@ -59,8 +60,18 @@ function Admin() {
       .catch((error) => console.log("error", error));
   }
 
+  /*  SEARCH */
+
+  function handlerSearch(e) {
+    e.preventDefault();
+    const result = allMail.filter((subject) =>
+      subject.subject_txt.toLowerCase().includes(e.target.value)
+    );
+    setAllMail(result);
+  }
+
   return (
-    <div className="w-screen h-screen bg-[#f8f8f8] flex ">
+    <div className="w-screen h-screen bg-[rgba(217,217,217,0.4)] flex ">
       <div className="w-[10vw] p-6 ">
         <SidebarAdmin />
       </div>
@@ -74,7 +85,7 @@ function Admin() {
               <Mail state={setSelectMail} data={selectMail} />
             ) : (
               <>
-                <div className="border-b-[1px] h-[14vh] ">
+                <div className="border-b-[1px] h-[18vh] ">
                   <form onSubmit={handlerBtnFilter}>
                     <div className="mb-4 flex items-center">
                       <div className="flex flex-col mr-4">
@@ -83,7 +94,7 @@ function Admin() {
                         </label>
                         <select
                           name="select_name"
-                          className="bg-[#f8f8f8] rounded-lg outline-0 focus:outline-0 text-[14px] p-2"
+                          className="bg-[rgba(217,217,217,0.4)] rounded-lg outline-0 focus:outline-0 text-[14px] p-2"
                         >
                           {officeName?.map((name, index) => {
                             return (
@@ -104,7 +115,7 @@ function Admin() {
                         </label>
                         <select
                           name="select_mail"
-                          className="bg-[#f8f8f8] rounded-lg outline-0 focus:outline-0 text-[14px] p-2"
+                          className="bg-[rgba(217,217,217,0.4)] rounded-lg outline-0 focus:outline-0 text-[14px] p-2"
                         >
                           {mailtype?.map((mail, index) => {
                             return (
@@ -126,40 +137,68 @@ function Admin() {
                         <input
                           type="date"
                           name="start_date"
-                          className="bg-[#f8f8f8] rounded-lg outline-0 focus:outline-0 text-[14px] p-2"
+                          className="bg-[rgba(217,217,217,0.4)] rounded-lg outline-0 focus:outline-0 text-[14px] p-2"
                           // defaultValue={moment(new Date())
                           //   .subtract(10, "days")
                           //   .calendar()}
                         />
                       </div>
 
-                      <div className="flex flex-col">
+                      <div className="flex flex-col w-full">
                         <label className="text-[rgba(0,0,0,0.5)] text-[12px] mb-3">
                           Хайлт хийх
                         </label>
                         <button
                           type="submit"
-                          className="rounded-lg p-1.5 hover:bg-[red] bg-[#1e45a2]  text-[#ffffff]"
+                          className="rounded-lg p-[10px]  hover:bg-[#1B3E91] bg-[#1e45a2]  flex justify-center text-[#ffffff]/[.6] hover:text-[white]"
                         >
-                          хайх
+                          <RiFilterLine />
                         </button>
                       </div>
                     </div>
                   </form>
+                  <div className=" w-full  rounded-lg text-[12px]">
+                    <button
+                      type="submit"
+                      className="absolute ml-[8px] mt-[7px] text-[rgba(0,0,0,0.6)]"
+                    >
+                      <RiSearchLine size="20px" />
+                    </button>
+                    <input
+                      type="search"
+                      placeholder="хайлт"
+                      name="search"
+                      className=" w-full rounded-lg pr-3 pl-10 py-2 ring-2 focus:ring-2  text-[#000000]"
+                      onChange={handlerSearch}
+                    />
+                  </div>
                 </div>
-                <div className="h-[62vh] overflow-auto scrollbar-hide">
+                <div className="h-[61vh] overflow-auto scrollbar-hide">
                   {allMail?.map((mail, index) => {
                     return (
                       <div
                         key={index}
-                        className="flex justify-start items-center  border-b-[1px] m-3 h-[5vh]  "
+                        className="flex justify-start items-center  border-b-[1px]  my-[10px] h-[5vh]  "
                       >
                         <button
                           className="flex w-full justify-between"
                           onClick={() => handlerBtn(mail)}
                         >
-                          <p className="text-[12px]">{mail.subject_txt}</p>
-                          <p className="text-[12px]">
+                          <div className="flex ">
+                            <p className="text-[12px] w-[300px] flex items-start">
+                              {mail.office_from}
+                            </p>
+                            {mail.subject_txt.length > 50 ? (
+                              <p className="text-[12px] ml-5 z-40">
+                                {mail.subject_txt.slice(0, 50)} ...
+                              </p>
+                            ) : (
+                              <p className="text-[12px] ml-5 ">
+                                {mail.subject_txt}
+                              </p>
+                            )}
+                          </div>
+                          <p className="text-[12px] mr-[10px]">
                             {moment(mail.dateTime).format("lll")}
                           </p>
                         </button>
