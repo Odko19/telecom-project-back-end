@@ -1,32 +1,24 @@
 import { RiInboxArchiveFill, RiSearchLine } from "react-icons/ri";
+import { useEffect, useState } from "react";
+import { archivesServices } from "../services/navbarServices";
+import { ToastContainer, toast } from "react-toastify";
 
 function Navbar({ checkBox, checkedId, onSearch }) {
-  function selectAllCheckbox() {
-    const chkbxAll = document.querySelectorAll(".chkbxAll");
-    for (let i = 0; i < checkBox.length; i++) {
-      checkBox[i].checked = chkbxAll[0].checked;
+  const [user, setUser] = useState();
+
+  useEffect(() => {
+    if (window.localStorage.getItem("user")) {
+      setUser(JSON.parse(window.localStorage.getItem("user")).data);
     }
-  }
+  }, []);
 
   function handlerArchives() {
-    var myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-    var raw = JSON.stringify({
-      archives: checkedId,
-    });
-
-    var requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: raw,
-      redirect: "follow",
-    };
-
-    fetch("http://localhost:3001/v1/archives", requestOptions)
+    archivesServices
+      .getArchives(checkedId)
       .then((response) => response.text())
       .then((result) => {
         if (JSON.parse(result).success === true) {
-          alert("archives");
+          toast("архивласан");
         }
       })
       .catch((error) => console.log("error", error));
@@ -38,23 +30,12 @@ function Navbar({ checkBox, checkedId, onSearch }) {
   }
 
   return (
-    <div className="h-full flex  items-center bg-[#1e45a2]  rounded-t-lg text-[#ffffff]/[.6]">
-      {/* <button className="ml-5">
-        <RiArrowGoBackFill />
-      </button> */}
-      <button className="ml-3 p-3">
-        <input
-          type="checkbox"
-          onChange={() => selectAllCheckbox()}
-          className="chkbxAll"
-        />
-      </button>
-
-      <button className="p-3" onClick={handlerArchives}>
+    <div className="h-full flex items-center bg-[#1e45a2]  rounded-t-lg text-[#ffffff]/[.6] px-7">
+      <ToastContainer />
+      <button onClick={handlerArchives}>
         <RiInboxArchiveFill size="20px" />
       </button>
-
-      <div className="mx-3 w-full  rounded-lg text-[12px] relative">
+      <div className="mx-5 w-full  rounded-lg text-[12px] relative">
         <button
           type="submit"
           className="absolute ml-[8px] mt-[7px] text-[rgba(0,0,0,0.6)]"
@@ -69,6 +50,9 @@ function Navbar({ checkBox, checkedId, onSearch }) {
           onChange={handlerSearch}
         />
       </div>
+      <p className="text-[#ffffff]/[.9] text-[13px] text-center">
+        {user?.office_name}
+      </p>
     </div>
   );
 }

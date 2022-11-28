@@ -3,7 +3,7 @@ const db = require("../db/db");
 async function getImageUpload(req) {
   const { office_name_from, office_name_to, subject_txt } = req.body;
   const imgArr = req.files.map((a) => {
-    return `http://10.0.10.102:3001/uploads/${a.filename}`;
+    return `http://localhost:3001/uploads/${a.filename}`;
   });
   const data = await db.query(
     "INSERT INTO  data_list ( office_name_from, office_name_to, subject_txt, imgUrl , dateTime_now) VALUES (?, ?, ?, ?, NOW())",
@@ -25,13 +25,13 @@ async function getAllInbox(req) {
   const { office_id } = req.params;
   const data = await db.query(
     `SELECT data_list.id, 
-    data_list.subject_txt, data_list.imgUrl, data_list.dateTime_now, data_list.archives,
+    data_list.subject_txt, data_list.imgUrl, data_list.dateTime_now, data_list.archives, data_list.new_msg,
     office_from.office_name as office_from,
     office_to.office_name as office_to
     from data_list
     INNER JOIN office_list office_from ON data_list.office_name_from = office_from.id
     LEFT JOIN office_list office_to ON data_list.office_name_to = office_to.id
-    WHERE data_list.office_name_to = ?;`,
+    WHERE data_list.office_name_to = ? ORDER BY dateTime_now desc;`,
     [office_id]
   );
 
@@ -51,7 +51,7 @@ async function getAllSent(req) {
     from data_list
     INNER JOIN office_list office_from ON data_list.office_name_from = office_from.id
     LEFT JOIN office_list office_to ON data_list.office_name_to = office_to.id
-    WHERE data_list.office_name_from = ?;`,
+    WHERE data_list.office_name_from = ? ORDER BY dateTime_now desc;`,
     [office_id]
   );
 
@@ -108,6 +108,25 @@ async function getArchivesList(req) {
   };
 }
 
+async function getInboxNewMsg(req) {
+  const { id } = req.params;
+  const data = await db.query(`UPDATE data_list SET new_msg=1 WHERE id=?`, [
+    id,
+  ]);
+  return {
+    success: true,
+    data,
+  };
+}
+
+async function getAllMailType(req) {
+  const data = await db.query(`select * from mail_type`);
+  return {
+    success: true,
+    data,
+  };
+}
+
 /* All mail ADMIN */
 
 async function getAllData() {
@@ -118,7 +137,7 @@ async function getAllData() {
   office_to.office_name as office_to
   from data_list
   INNER JOIN office_list office_from ON data_list.office_name_from = office_from.id
-  LEFT JOIN office_list office_to ON data_list.office_name_to = office_to.id
+  LEFT JOIN office_list office_to ON data_list.office_name_to = office_to.id ORDER BY data_list.dateTime_now desc
   `
   );
   return {
@@ -185,7 +204,7 @@ async function getAllAdminInboxSent(req) {
       from data_list
       INNER JOIN office_list office_from ON data_list.office_name_from = office_from.id
       LEFT JOIN office_list office_to ON data_list.office_name_to = office_to.id
-      WHERE data_list.office_name_from = ? and data_list.dateTime_now > ?`,
+      WHERE data_list.office_name_from = ? and data_list.dateTime_now >= ?`,
         [office_id, start_date]
       );
     }
@@ -198,7 +217,7 @@ async function getAllAdminInboxSent(req) {
       from data_list
       INNER JOIN office_list office_from ON data_list.office_name_from = office_from.id
       LEFT JOIN office_list office_to ON data_list.office_name_to = office_to.id
-      WHERE data_list.office_name_to =? and data_list.dateTime_now > ? ;`,
+      WHERE data_list.office_name_to =? and data_list.dateTime_now >= ? ;`,
         [office_id, start_date]
       );
     } else {
@@ -212,7 +231,7 @@ async function getAllAdminInboxSent(req) {
       INNER JOIN office_list office_from ON data_list.office_name_from = office_from.id
       LEFT JOIN office_list office_to ON data_list.office_name_to = office_to.id
       WHERE (data_list.office_name_to =? OR data_list.office_name_from=?) 
-      and data_list.archives = ? and data_list.dateTime_now > ?`,
+      and data_list.archives = ? and data_list.dateTime_now >= ?`,
           [office_id, office_id, 1, start_date]
         );
       }
@@ -232,5 +251,7 @@ module.exports = {
   getDltData,
   getArchives,
   getArchivesList,
+  getInboxNewMsg,
   getAllAdminInboxSent,
+  getAllMailType,
 };

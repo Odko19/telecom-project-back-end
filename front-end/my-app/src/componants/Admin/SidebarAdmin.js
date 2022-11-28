@@ -19,7 +19,7 @@ function SidebarAdmin() {
   }
 
   return (
-    <div className="h-full rounded-lg bg-[#1e45a2] shadow-[0_7px_15px_0px_#1e45a2] text-[#ffffff]/[.6]">
+    <div className="h-full rounded-lg bg-[#1e45a2] text-[#ffffff]/[.6]">
       <div className="h-full flex flex-col justify-between items-center">
         <div className="flex flex-col justify-between items-center">
           {/* <img src="./logo.png" alt="" className="mt-2" /> */}

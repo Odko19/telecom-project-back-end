@@ -1,38 +1,26 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
+import { loginServices } from "../services/loginServices";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Login() {
   const [officeName, setOfficeName] = useState();
 
   useEffect(() => {
-    axios
-      .get("http://localhost:3001/v1")
+    loginServices
+      .getAllOfficeName()
       .then((res) => setOfficeName(res.data.data))
       .catch((error) => console.log(error));
   });
 
   function handlerBtn(e) {
     e.preventDefault();
-
-    var myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-    var raw = JSON.stringify({
-      id: Number(e.target.selected.value),
-      password: Number(e.target.password.value),
-    });
-
-    var requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: raw,
-      redirect: "follow",
-    };
-
-    fetch("http://localhost:3001/v1/userLogin", requestOptions)
+    loginServices
+      .getUserLogin(e.target.selected.value, e.target.password.value)
       .then((response) => response.text())
       .then((result) => {
         if (JSON.parse(result).success === false) {
-          alert("amjiltgui");
+          toast("Нууц үг буруу байна");
         } else {
           window.localStorage.setItem("user", result);
           window.location.reload();
@@ -47,6 +35,7 @@ function Login() {
         {/* <p className="uppercase">telecom mongolia</p> */}
       </div>
       <div className="w-[85vw] flex justify-center items-center">
+        <ToastContainer />
         <div className="w-[35vw]  p-5 flex flex-col justify-center items-center">
           <img src="./logo-white.png" alt="" className="w-[15vw] mb-[4vw]" />
           <form onSubmit={handlerBtn}>
@@ -76,7 +65,7 @@ function Login() {
               />
               <button
                 type="submit "
-                className="w-full bg-[#1e45a2] text-[#ffffff] p-3 mt-5 rounded-lg uppercase hover:bg-[#1B3E91] "
+                className="w-full bg-[#1e45a2] text-[#ffffff]  hover:bg-[#1B3E91] p-3 mt-5 rounded-lg uppercase "
               >
                 Нэвтрэх
               </button>

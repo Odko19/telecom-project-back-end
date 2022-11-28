@@ -1,4 +1,4 @@
-const imageService = require("../services/image.services");
+const imageService = require("../services/mail.services");
 
 const getImageUpload = async (req, res) => {
   try {
@@ -48,6 +48,22 @@ const getArchivesList = async (req, res) => {
   }
 };
 
+const getInboxNewMsg = async (req, res) => {
+  try {
+    res.json(await imageService.getInboxNewMsg(req));
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const getAllMailType = async (req, res) => {
+  try {
+    res.json(await imageService.getAllMailType(req));
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 /* All mail ADMIN */
 
 const getAllData = async (req, res) => {
@@ -75,4 +91,6 @@ module.exports = {
   getArchives,
   getArchivesList,
   getDataFilter,
+  getInboxNewMsg,
+  getAllMailType,
 };

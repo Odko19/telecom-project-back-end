@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const router = require("./routes/officeList.route");
-const routerImage = require("./routes/image.route");
+const routerImage = require("./routes/mail.route");
 const routerLoginUser = require("./routes/user.auth.route");
 const PORT = process.env.PORT;
 
