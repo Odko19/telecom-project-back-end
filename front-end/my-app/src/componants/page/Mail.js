@@ -4,9 +4,7 @@ function Mail({ data, state }) {
   function handlerBack() {
     state(0);
   }
-  function handlerZoomImg() {
-    console.log("ss");
-  }
+
   return (
     <div className="h-full w-full">
       <div className="flex justify-end">
@@ -38,7 +36,7 @@ function Mail({ data, state }) {
           <div className="grid grid-cols-4 mt-4">
             {data.imgUrl.map((image, index) => {
               return (
-                <button key={index} onClick={handlerZoomImg}>
+                <button key={index}>
                   <img src={image} className="p-1" />
                 </button>
               );

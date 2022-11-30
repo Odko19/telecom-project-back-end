@@ -1,10 +1,4 @@
-import { NavLink } from "react-router-dom";
-import {
-  RiInboxFill,
-  RiArchiveDrawerFill,
-  RiSendPlane2Fill,
-  RiLogoutBoxRLine,
-} from "react-icons/ri";
+import { RiLogoutBoxRLine } from "react-icons/ri";
 
 function SidebarAdmin() {
   const navLinkStyles = ({ isActive }) => {
@@ -21,18 +15,7 @@ function SidebarAdmin() {
   return (
     <div className="h-full rounded-lg bg-[#1e45a2] text-[#ffffff]/[.6]">
       <div className="h-full flex flex-col justify-between items-center">
-        <div className="flex flex-col justify-between items-center">
-          {/* <img src="./logo.png" alt="" className="mt-2" /> */}
-          {/* <NavLink style={navLinkStyles} to="/" className="p-3 mt-[3.5vw]">
-            <RiInboxFill size="21px" />
-          </NavLink>
-          <NavLink style={navLinkStyles} to="/sent" className="p-3">
-            <RiSendPlane2Fill size="21px" />
-          </NavLink>
-          <NavLink style={navLinkStyles} to="/archives" className="p-3">
-            <RiArchiveDrawerFill size="21px" />
-          </NavLink> */}
-        </div>
+        <div className="flex flex-col justify-between items-center"></div>
         <div className="mb-8">
           <button onClick={handlerExit} className="hover:text-[white]">
             <RiLogoutBoxRLine size="21px" />

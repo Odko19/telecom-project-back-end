@@ -9,6 +9,7 @@ function Sent() {
   const [selectMail, setSelectMail] = useState();
   const [user, setUser] = useState();
   const [checkedId, setCheckedId] = useState();
+  const [search, setSearch] = useState();
 
   useEffect(() => {
     if (window.localStorage.getItem("user")) {
@@ -45,7 +46,11 @@ function Sent() {
     const result = sent.filter((subject) =>
       subject.subject_txt.toLowerCase().includes(event)
     );
-    setSent(result);
+    if (result.length === 0) {
+      setSearch("Илэрч алга");
+    } else {
+      setSent(result);
+    }
   }
 
   return (
@@ -64,46 +69,67 @@ function Sent() {
                 />
               </div>
             </div>
-            <div className="px-5 h-[82vh] overflow-y-scroll">
-              {sent?.map((mail, index) => {
-                return (
-                  <div
-                    key={index}
-                    className="flex justify-start items-center  border-b-[1px] my-[10px] h-[5vh] hover:shadow-md"
-                  >
-                    <input
-                      type="checkbox"
-                      value={mail.id}
-                      className="mr-2 select-option"
-                      onChange={checkedAll}
-                    />
-                    <button
-                      className="flex w-full justify-between"
-                      onClick={() => handlerBtn(mail)}
+            {search ? (
+              <div className=" px-5 h-[82vh] flex justify-center items-center">
+                <p className="text-[12px]"> {search}</p>
+              </div>
+            ) : (
+              <div className="px-5 h-[82vh] overflow-y-scroll">
+                {sent?.map((mail, index) => {
+                  return (
+                    <div
+                      key={index}
+                      className="flex justify-start items-center  border-b-[1px] my-[10px] h-[5vh] hover:shadow-md"
                     >
-                      <div className="flex">
-                        <p className="text-[12px] w-[250px] flex items-start">
-                          {mail.office_to}
-                        </p>
-                        {mail.subject_txt.length > 50 ? (
-                          <p className="text-[12px] ml-5 z-40">
-                            {mail.subject_txt.slice(0, 50)} ...
+                      <input
+                        type="checkbox"
+                        value={mail.id}
+                        className="mr-2 select-option"
+                        onChange={checkedAll}
+                      />
+                      <button
+                        className="flex w-full justify-between"
+                        onClick={() => handlerBtn(mail)}
+                      >
+                        <div className="flex">
+                          <p className="text-[12px] w-[400px] flex tems-center ">
+                            <span className="text-[rgba(0,0,0,0.5)] text-[11px] mr-1">
+                              from:
+                            </span>
+                            {mail.office_to}
+                            <span className="bg-[rgba(217,217,217,0.7)] text-[black] text-[10px] font-light px-1 rounded-md mx-2">
+                              {mail.mail_time}
+                            </span>
                           </p>
-                        ) : (
-                          <p className="text-[12px] ml-5 ">
-                            {mail.subject_txt}
-                          </p>
-                        )}
-                      </div>
+                          {mail.subject_txt.length > 50 ? (
+                            <p className="text-[12px] ml-5 z-40">
+                              <span className="text-[rgba(0,0,0,0.5)] text-[11px] mr-1">
+                                subject:
+                              </span>
+                              {mail.subject_txt.slice(0, 50)} ...
+                            </p>
+                          ) : (
+                            <p className="text-[12px] ml-5 ">
+                              <span className="text-[rgba(0,0,0,0.5)] text-[11px] mr-1">
+                                subject:
+                              </span>
+                              {mail.subject_txt}
+                            </p>
+                          )}
+                        </div>
 
-                      <p className="text-[12px]">
-                        {moment(mail.dateTime_now).format("lll")}
-                      </p>
-                    </button>
-                  </div>
-                );
-              })}
-            </div>
+                        <p className="text-[12px]">
+                          <span className="text-[rgba(0,0,0,0.5)] mr-1 text-[11px]">
+                            date:
+                          </span>
+                          {moment(mail.dateTime_now).format("lll")}
+                        </p>
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
         </>
       )}

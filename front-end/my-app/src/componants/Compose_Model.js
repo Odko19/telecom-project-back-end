@@ -1,9 +1,8 @@
 import { useEffect, useState, useRef } from "react";
-import { RiCloseFill, RiUploadCloudFill } from "react-icons/ri";
+import { RiCloseFill } from "react-icons/ri";
 import { ToastContainer, toast } from "react-toastify";
 import { composeServices } from "../services/composeServices";
 import Modal from "react-modal";
-import axios from "axios";
 
 function Compose_Model({ showModel, setShowModel }) {
   const [officeName, setOfficeName] = useState();
@@ -35,6 +34,7 @@ function Compose_Model({ showModel, setShowModel }) {
         formdata.append("office_name_from", user?.data.id);
         formdata.append("office_name_to", e.target.selected.value);
         formdata.append("subject_txt", e.target.subject.value);
+        formdata.append("mail_time", e.target.mail_type.value);
       }
       var requestOptions = {
         method: "POST",
@@ -46,6 +46,7 @@ function Compose_Model({ showModel, setShowModel }) {
         .then((result) => {
           if (JSON.parse(result).success === true) {
             toast("майл явсан");
+            // window.location.href = "/sent";
           }
         })
         .catch((error) => console.log("error", error));
@@ -57,6 +58,7 @@ function Compose_Model({ showModel, setShowModel }) {
   /* form two button  */
   function handlerSent(sent) {
     setSent_Mail(sent);
+    // setShowModel(false);
   }
   function handlerImage(name) {
     setSent_Mail(name);
@@ -80,7 +82,7 @@ function Compose_Model({ showModel, setShowModel }) {
       isOpen={showModel}
       ariaHideApp={false}
       onRequestClose={() => setShowModel(false)}
-      className="absolute bottom-0 right-[2vw] bg-[white] rounded-t-lg shadow-[0_2px_5px_2px_rgba(0,0,0,0.1)]"
+      className="absolute bottom-0 right-[2vw] bg-[white] rounded-lg shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)] mb-6"
       style={{
         overlay: {
           backgroundColor: "none",
@@ -89,7 +91,7 @@ function Compose_Model({ showModel, setShowModel }) {
     >
       <ToastContainer />
       <div className="p-3 bg-[#1e45a2] rounded-t-lg text-[rgba(255,255,255,0.7)] flex w-full justify-between">
-        <p>New message</p>
+        <p>Албан бичиг илгээх</p>
         <button
           className="hover:text-[white]"
           onClick={() => setShowModel(false)}
@@ -100,7 +102,7 @@ function Compose_Model({ showModel, setShowModel }) {
 
       <form
         onSubmit={handlerBtn}
-        className="p-3 w-[550px] h-[500px] flex flex-col justify-between"
+        className="p-3 w-[500px] h-[450px] 2xl:w-[550px] 2xl:h-[500px] flex flex-col justify-between"
       >
         <div>
           <div className="mb-4 w-full flex  border-b-[1px] border-[rgba(217,217,217,0.6)]">
@@ -129,6 +131,19 @@ function Compose_Model({ showModel, setShowModel }) {
               })}
             </select>
           </div>
+          <div className="mb-4 w-full flex  border-b-[1px] border-[rgba(217,217,217,0.6)]">
+            <label className="text-[rgba(0,0,0,0.5)] text-[12px] mb-2 w-[60px]">
+              Type
+            </label>
+            <select
+              name="mail_type"
+              className="bg-transparent w-full outline-0 focus:outline-0 text-[14px] mb-2"
+            >
+              <option value="Яаралтай">Яаралтай</option>
+              <option value="Энгийн">Энгийн</option>
+            </select>
+          </div>
+
           <div className="mb-6 w-full flex items-center border-b-[1px] border-[rgba(217,217,217,0.8)]">
             <label className="block text-[rgba(0,0,0,0.5)] w-[60px] mb-2 text-[12px]">
               Subject :
@@ -139,6 +154,7 @@ function Compose_Model({ showModel, setShowModel }) {
               type="text"
             />
           </div>
+
           <div>
             <div
               ref={wrapperRef}
@@ -160,7 +176,7 @@ function Compose_Model({ showModel, setShowModel }) {
                 onChange={onFileDrop}
               />
             </div>
-            <div className="flex w-full h-[250px] overflow-y-scroll">
+            <div className="flex w-full 2xl:h-[200px] h-[150px] overflow-y-scroll">
               {fileList.length > 0 ? (
                 <div className="w-full text-[12px] m-2">
                   {fileList.map((item, index) => {
@@ -174,7 +190,7 @@ function Compose_Model({ showModel, setShowModel }) {
                           onClick={() => handlerImage(item.name)}
                           className="hover:text-[#1e45a2]"
                         >
-                          x
+                          <RiCloseFill />
                         </button>
                       </div>
                     );
@@ -188,10 +204,10 @@ function Compose_Model({ showModel, setShowModel }) {
         </div>
 
         <button
-          className="uppercase font-medium bg-[#1e45a2] text-[#fff] text-[12px] w-full hover:bg-[#1B3E91] text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          className="font-medium bg-[#1e45a2] text-[#fff] text-[12px] w-full hover:bg-[#1B3E91] text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline"
           onClick={() => handlerSent("sent")}
         >
-          Sent
+          Илгээх
         </button>
       </form>
     </Modal>

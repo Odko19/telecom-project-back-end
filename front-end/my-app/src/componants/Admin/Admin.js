@@ -10,6 +10,7 @@ function Admin() {
   const [allMail, setAllMail] = useState();
   const [selectMail, setSelectMail] = useState();
   const [mailType, setMailType] = useState();
+  const [search, setSearch] = useState();
 
   useEffect(() => {
     adminServices
@@ -55,11 +56,15 @@ function Admin() {
     const result = allMail.filter((subject) =>
       subject.subject_txt.toLowerCase().includes(e.target.value)
     );
-    setAllMail(result);
+    if (result.length === 0) {
+      setSearch("Илэрч алга");
+    } else {
+      setAllMail(result);
+    }
   }
 
   return (
-    <div className="w-screen h-screen bg-[rgba(217,217,217,0.4)] flex ">
+    <div className="w-screen h-screen bg-[rgba(217,217,217,0.7)] flex ">
       <div className="w-[10vw] p-6 ">
         <SidebarAdmin />
       </div>
@@ -69,7 +74,7 @@ function Admin() {
             <Mail state={setSelectMail} data={selectMail} />
           ) : (
             <>
-              <div className="border-b-[1px] h-[22vh] min-[1400px]:h-[20vh]">
+              <div className="border-b-[1px] h-[20vh] min-[1400px]:h-[20vh]">
                 <form onSubmit={handlerBtnFilter}>
                   <div className="mb-4 flex items-center">
                     <div className="flex flex-col mr-4">
@@ -78,7 +83,7 @@ function Admin() {
                       </label>
                       <select
                         name="select_name"
-                        className="bg-[rgba(217,217,217,0.4)] rounded-lg outline-0 focus:outline-0 text-[14px] p-2"
+                        className="bg-[rgba(217,217,217,0.7)] rounded-lg outline-0 focus:outline-0 text-[14px] p-2"
                       >
                         {officeName?.map((name, index) => {
                           if (name.office_name !== "Админ") {
@@ -101,7 +106,7 @@ function Admin() {
                       </label>
                       <select
                         name="select_mail"
-                        className="bg-[rgba(217,217,217,0.4)] rounded-lg outline-0 focus:outline-0 text-[14px] p-2"
+                        className="bg-[rgba(217,217,217,0.7)] rounded-lg outline-0 focus:outline-0 text-[14px] p-2"
                       >
                         {mailType?.map((mail, index) => {
                           return (
@@ -123,7 +128,7 @@ function Admin() {
                       <input
                         type="date"
                         name="start_date"
-                        className="bg-[rgba(217,217,217,0.4)] rounded-lg outline-0 focus:outline-0 text-[14px] p-2"
+                        className="bg-[rgba(217,217,217,0.7)] rounded-lg outline-0 focus:outline-0 text-[14px] p-2"
                       />
                     </div>
 
@@ -156,39 +161,45 @@ function Admin() {
                   />
                 </div>
               </div>
-              <div className="h-[65vh] overflow-auto scrollbar-hide">
-                {allMail?.map((mail, index) => {
-                  return (
-                    <div
-                      key={index}
-                      className="flex justify-start items-center  border-b-[1px]  my-[10px] h-[5vh]  hover:shadow-md"
-                    >
-                      <button
-                        className="flex w-full justify-between"
-                        onClick={() => handlerBtn(mail)}
+              {search ? (
+                <div className=" px-5 h-[67vh] flex justify-center items-center">
+                  <p className="text-[12px]"> {search}</p>
+                </div>
+              ) : (
+                <div className="h-[67vh] overflow-auto scrollbar-hide">
+                  {allMail?.map((mail, index) => {
+                    return (
+                      <div
+                        key={index}
+                        className="flex justify-start items-center  border-b-[1px]  my-[10px] h-[5vh]  hover:shadow-md"
                       >
-                        <div className="flex ">
-                          <p className="text-[12px] w-[300px] flex items-start">
-                            {mail.office_from}
+                        <button
+                          className="flex w-full justify-between"
+                          onClick={() => handlerBtn(mail)}
+                        >
+                          <div className="flex ">
+                            <p className="text-[12px] w-[300px] flex items-start">
+                              {mail.office_from}
+                            </p>
+                            {mail.subject_txt.length > 50 ? (
+                              <p className="text-[12px] ml-5 z-40">
+                                {mail.subject_txt.slice(0, 50)} ...
+                              </p>
+                            ) : (
+                              <p className="text-[12px] ml-5 ">
+                                {mail.subject_txt}
+                              </p>
+                            )}
+                          </div>
+                          <p className="text-[12px] mr-[10px]">
+                            {moment(mail.dateTime_now).format("lll")}
                           </p>
-                          {mail.subject_txt.length > 50 ? (
-                            <p className="text-[12px] ml-5 z-40">
-                              {mail.subject_txt.slice(0, 50)} ...
-                            </p>
-                          ) : (
-                            <p className="text-[12px] ml-5 ">
-                              {mail.subject_txt}
-                            </p>
-                          )}
-                        </div>
-                        <p className="text-[12px] mr-[10px]">
-                          {moment(mail.dateTime_now).format("lll")}
-                        </p>
-                      </button>
-                    </div>
-                  );
-                })}
-              </div>
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </>
           )}
         </div>

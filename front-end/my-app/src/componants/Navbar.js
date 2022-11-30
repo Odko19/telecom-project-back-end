@@ -19,6 +19,8 @@ function Navbar({ checkBox, checkedId, onSearch }) {
       .then((result) => {
         if (JSON.parse(result).success === true) {
           toast("архивласан");
+        } else {
+          toast("чек хийнэ үү");
         }
       })
       .catch((error) => console.log("error", error));
